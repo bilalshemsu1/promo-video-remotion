@@ -203,6 +203,22 @@ More: [`references/tooling-and-troubleshooting.md`](references/tooling-and-troub
 - [FAQ](docs/FAQ.md) — customization, costs, languages, licensing
 - [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md)
 
+## Security note
+
+`npm audit` inside the starter reports a high-severity advisory in `zod`
+([GHSA-mrhx-c7xc-m3w5](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5), memory exhaustion
+when validating oversized collections). It comes from Remotion's Studio packages, which pin
+`zod@4.5.4`; your scenes never touch zod, and the fix is upstream. If you want a clean audit
+you can force it:
+
+```json
+"overrides": { "zod": "4.6.7" }
+```
+
+Remotion then prints a "version mismatch" warning on every render. This repo keeps Remotion's
+pin so the starter stays warning-free — your call, and worth knowing before you publish a
+fork.
+
 ## Brand and legal notice
 
 - The starter's **Adly** brand, handles, URLs and payment badges are fictional placeholders. No third-party logos are bundled. Use official press-kit assets only when you have permission.

@@ -23,6 +23,8 @@ All notable changes to this skill. Dates are ISO.
   npm README renders correctly (the video and GIF are excluded from the package).
 - `install` keeps the skill folder small by skipping `*.mp4`, `*.gif`, `node_modules`,
   `out` and generated audio.
+- README documents the upstream `zod` advisory carried by Remotion's Studio packages and the
+  override trade-off.
 
 ## [1.1.0] — 2026-10-24
 
