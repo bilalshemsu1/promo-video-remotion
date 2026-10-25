@@ -1,0 +1,56 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  starter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: assets/starter-project/package-lock.json
+
+      - name: Install dependencies
+        working-directory: assets/starter-project
+        run: npm ci
+
+      - name: Typecheck
+        working-directory: assets/starter-project
+        run: npx tsc --noEmit
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Generate audio
+        working-directory: assets/starter-project
+        run: |
+          python3 -m pip install --quiet numpy
+          python3 scripts/make_audio.py
+
+      - name: Lint (strict)
+        run: python scripts/lint_design.py assets/starter-project/src --strict
+
+      - name: Shell syntax
+        run: bash -n scripts/scaffold.sh
+
+      - name: Skill frontmatter
+        run: |
+          python - <<'PY'
+          import pathlib, re
+          text = pathlib.Path("SKILL.md").read_text(encoding="utf-8")
+          assert text.startswith("---\n"), "SKILL.md must start with frontmatter"
+          block = text.split("---", 2)[1]
+          name = re.search(r"^name:\s*(.+)$", block, re.M).group(1).strip()
+          desc = re.search(r"^description:\s*(.+)$", block, re.M).group(1).strip()
+          assert name == "promo-video-remotion", name
+          assert len(desc) <= 1024, len(desc)
+          print(f"SKILL.md ok — {len(desc)} chars")
+          PY

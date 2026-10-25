@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Remotion output
+out/
+dist/
+
+# Generated audio (recreate with `npm run audio` / `npm run vo`)
+assets/starter-project/public/audio/**/*.wav
+assets/starter-project/public/audio/**/*.mp3
+assets/starter-project/public/audio/**/*.m4a
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Environment and editor files
+.env
+.env.*
+.DS_Store
+Thumbs.db
+*.log
+
+# Local release archives
+*.zip
