@@ -1,5 +1,7 @@
 # promo-video-remotion
 
+[![ci](https://github.com/bilalshemsu1/promo-video-remotion/actions/workflows/ci.yml/badge.svg)](https://github.com/bilalshemsu1/promo-video-remotion/actions/workflows/ci.yml)
+
 **Promo videos in code.** An agent skill that turns a brief into a finished vertical ad, product explainer or motion-graphics clip with [Remotion](https://www.remotion.dev/) — storyboard → design tokens → React scenes → synthesized sound → voiceover → verified MP4.
 
 No timeline editor, no subscriptions, no stock templates. You describe the video; the agent writes the scenes, renders, looks at stills, fixes what's broken, and hands you an MP4.
