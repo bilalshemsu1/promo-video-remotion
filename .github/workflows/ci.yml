@@ -6,6 +6,24 @@ on:
   pull_request:
 
 jobs:
+  cli:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+      - run: npm test
+
+      - name: Scaffold check
+        run: |
+          node bin/cli.mjs create /tmp/promo-cli-test --skip-install
+          test -f /tmp/promo-cli-test/src/Promo.tsx
+          test -f /tmp/promo-cli-test/public/audio/vo/manifest.json
+
   starter:
     runs-on: ubuntu-latest
     steps:

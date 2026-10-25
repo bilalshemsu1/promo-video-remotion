@@ -34,11 +34,19 @@ npx remotion render src/index.ts Promo out/promo.mp4 \
 
 ## Checks before a PR
 
+From the repository root:
+
+```bash
+npm test                                    # CLI: help, create, install, guards
+node bin/cli.mjs create /tmp/promo-test     # full scaffold: npm, numpy, audio, tsc
+```
+
+Then check the starter itself:
+
 ```bash
 cd assets/starter-project
 npx tsc --noEmit
 python ../../scripts/lint_design.py src --strict
-bash ../../scripts/scaffold.sh /tmp/promo-test   # fresh project still builds
 ```
 
 Then render one still per changed scene and **look at it**. Stills catch clipping, overlaps

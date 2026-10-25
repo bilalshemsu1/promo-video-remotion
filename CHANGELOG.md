@@ -2,6 +2,28 @@
 
 All notable changes to this skill. Dates are ISO.
 
+## [1.2.0] — 2026-10-25
+
+### Added
+- `bin/cli.mjs`: a zero-dependency CLI with three commands.
+  - `create <dir>` scaffolds the starter, runs `npm install`, installs numpy,
+    synthesizes SFX/music and typechecks. Flags: `--skip-install`, `--force`.
+  - `install [--agent qoder|claude] [--project] [--force]` copies the skill into an
+    agent skills folder, leaving out the demo video and generated audio.
+  - `doctor` runs the environment check.
+- `test/cli.test.mjs` (`npm test`): help/version, unknown command, scaffold filters,
+  overwrite guards and both install destinations.
+- Root `package.json` for npm distribution (`npx promo-video-remotion`, global install)
+  with a `files` whitelist, Node >= 18 engine and public publish config.
+- `.github/workflows/publish.yml`: publishes on version tags with provenance when
+  `NPM_TOKEN` is set.
+
+### Changed
+- README and QUICKSTART document the CLI path; demo media uses absolute GitHub URLs so the
+  npm README renders correctly (the video and GIF are excluded from the package).
+- `install` keeps the skill folder small by skipping `*.mp4`, `*.gif`, `node_modules`,
+  `out` and generated audio.
+
 ## [1.1.0] — 2026-10-24
 
 ### Added

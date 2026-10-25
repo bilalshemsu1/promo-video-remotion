@@ -1,0 +1,58 @@
+{
+  "name": "promo-video-remotion",
+  "version": "1.2.0",
+  "description": "Agent skill + CLI for making promo videos in code with Remotion: style presets, synthesized sound, any-language voiceover, verified MP4.",
+  "type": "module",
+  "bin": {
+    "promo-video-remotion": "bin/cli.mjs"
+  },
+  "files": [
+    "bin/",
+    "SKILL.md",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "references/",
+    "scripts/",
+    "docs/*.md",
+    "assets/starter-project/README.md",
+    "assets/starter-project/package.json",
+    "assets/starter-project/package-lock.json",
+    "assets/starter-project/tsconfig.json",
+    "assets/starter-project/src/",
+    "assets/starter-project/scripts/",
+    "assets/starter-project/public/audio/vo/manifest.json"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": [
+    "remotion",
+    "video",
+    "promo",
+    "ad",
+    "agent",
+    "skill",
+    "tiktok",
+    "reels",
+    "shorts",
+    "motion-graphics"
+  ],
+  "author": "Bilal Shemsu",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bilalshemsu1/promo-video-remotion.git"
+  },
+  "homepage": "https://github.com/bilalshemsu1/promo-video-remotion#readme",
+  "bugs": {
+    "url": "https://github.com/bilalshemsu1/promo-video-remotion/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

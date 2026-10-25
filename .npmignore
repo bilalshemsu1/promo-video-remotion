@@ -1,0 +1,7 @@
+# Never ship caches, build output or local archives in the npm tarball.
+__pycache__/
+*.pyc
+node_modules/
+out/
+*.zip
+*.tgz

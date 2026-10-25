@@ -3,6 +3,16 @@
 This guide assumes no video-editing experience. You need a terminal once; after that you
 talk to your agent.
 
+Fastest path, if Node 18+ and Python 3.9+ are installed:
+
+```bash
+npx github:bilalshemsu1/promo-video-remotion create my-promo
+cd my-promo
+npm start
+```
+
+The rest of this page explains each step and the agent workflow.
+
 ## 1. Check your machine
 
 ```bash
@@ -10,7 +20,7 @@ node --version     # 18 or newer
 python --version   # 3.9 or newer (Windows: py --version)
 ```
 
-From the skill folder you can run the guided check:
+From the skill folder you can run the guided check (`npx github:bilalshemsu1/promo-video-remotion doctor` also works without cloning):
 
 ```bash
 python scripts/doctor.py
@@ -21,8 +31,17 @@ normalization and GIF previews. Both can wait.
 
 ## 2. Install the skill
 
-The skill is the folder containing `SKILL.md`. Copy it (or symlink it) into your agent's
-skills directory:
+The skill is the folder containing `SKILL.md`. The CLI copies it to the right place:
+
+```bash
+npx github:bilalshemsu1/promo-video-remotion install
+```
+
+Add `--agent claude` for Claude Code, `--project` to install into the current repository,
+or `--force` to replace an existing copy. Once the npm package is published,
+`npx promo-video-remotion install` is the shorter form.
+
+Or copy it yourself:
 
 ```bash
 # Qoder

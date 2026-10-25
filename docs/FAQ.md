@@ -1,5 +1,17 @@
 # FAQ
 
+**How do I install it?**
+Two pieces, one command each: `npx github:bilalshemsu1/promo-video-remotion create my-promo`
+makes a project, and `npx github:bilalshemsu1/promo-video-remotion install` copies the skill
+into `~/.qoder/skills/` (or `~/.claude/skills/` with `--agent claude`, or the current repo
+with `--project`). You can also copy the folder by hand. The package currently installs from
+GitHub; once it is published, the shorter `npx promo-video-remotion` form works too.
+
+**Do I need to know React or Remotion?**
+No to make a video: you give a brief and the agent writes the scenes. Yes if you want to
+hand-edit deeply — the output is a normal Remotion project in TypeScript, so React knowledge
+helps when changing layout or animation code.
+
 **Will every video look the same?**
 No. The default preset is `premium-dark`, so a vague request drifts toward that look, but
 the skill ships four presets and supports custom directions. Say the style you want, or

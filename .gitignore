@@ -25,3 +25,4 @@ Thumbs.db
 
 # Local release archives
 *.zip
+*.tgz

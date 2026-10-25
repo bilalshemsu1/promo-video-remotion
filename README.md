@@ -6,9 +6,9 @@
 
 No timeline editor, no subscriptions, no stock templates. You describe the video; the agent writes the scenes, renders, looks at stills, fixes what's broken, and hands you an MP4.
 
-![45-second starter promo](docs/preview.gif)
+![45-second starter promo](https://raw.githubusercontent.com/bilalshemsu1/promo-video-remotion/main/docs/preview.gif)
 
-[Watch the full demo](docs/demo.mp4) — 45 s, 540×960, music + SFX, no voiceover.
+[Watch the full demo](https://github.com/bilalshemsu1/promo-video-remotion/blob/main/docs/demo.mp4) — 45 s, 540×960, music + SFX, no voiceover.
 
 ## Make your first video
 
@@ -53,6 +53,32 @@ More prompt patterns and a brief template: [`docs/PROMPTING.md`](docs/PROMPTING.
 
 ## Install
 
+### CLI (recommended)
+
+```bash
+# run it without installing (works today, straight from GitHub)
+npx github:bilalshemsu1/promo-video-remotion create my-promo
+
+# or install the command once
+npm i -g github:bilalshemsu1/promo-video-remotion
+promo-video-remotion create my-promo
+```
+
+`create` copies the starter, installs dependencies, synthesizes SFX + music, and typechecks it. Add `--skip-install` to scaffold only. Once the npm package is published, `npx promo-video-remotion ...` works the same way.
+
+Install the skill into your agent as well:
+
+```bash
+promo-video-remotion install                    # ~/.qoder/skills/promo-video-remotion
+promo-video-remotion install --agent claude     # ~/.claude/skills/promo-video-remotion
+promo-video-remotion install --project          # ./.qoder/skills/... (commit it for the team)
+promo-video-remotion doctor                     # check Node, Python, numpy, edge-tts, ffmpeg
+```
+
+Use `--force` to replace an existing install. The installed skill folder excludes the demo video and generated audio to stay small.
+
+### Agent skill (manual)
+
 The skill is this folder: it contains `SKILL.md`, `references/`, `scripts/` and `assets/starter-project/`.
 
 | Agent | Where |
@@ -65,7 +91,9 @@ Then invoke `/promo-video-remotion`, or simply ask for a promo video, ad, explai
 
 ## Manual quickstart
 
-Requirements: **Node.js ≥ 18**, **Python ≥ 3.9** with numpy. Optional: `edge-tts` for voiceover, `ffmpeg` for loudness/GIF post. Run `python scripts/doctor.py` to check your machine.
+Already ran `create`? Skip to `npm start` in the new folder.
+
+Requirements: **Node.js ≥ 18**, **Python ≥ 3.9** with numpy. Optional: `edge-tts` for voiceover, `ffmpeg` for loudness/GIF post. Run `promo-video-remotion doctor` (or `python scripts/doctor.py`) to check your machine.
 
 ```bash
 # from this folder — copies the starter, installs deps, makes SFX + music, typechecks
@@ -96,6 +124,8 @@ npx remotion render src/index.ts Promo out/promo.mp4 --browser-executable="C:/Pr
 
 ```
 promo-video-remotion/
+├── bin/cli.mjs                  # create / install / doctor (zero dependencies)
+├── test/cli.test.mjs            # node:test suite
 ├── SKILL.md                     # agent workflow, hard rules, safe zones, definition of done
 ├── references/
 │   ├── style-presets.md         # 4 directions + universal rules
