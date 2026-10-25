@@ -1,0 +1,12 @@
+version: 2
+updates:
+  # The starter tracks Remotion, which pins its own dependency versions exactly.
+  - package-ecosystem: npm
+    directory: /assets/starter-project
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    ignore:
+      # Remotion pins zod@4.5.4 exactly; the advisory is fixed upstream, not here.
+      # See the "Security note" section in README.md.
+      - dependency-name: zod
