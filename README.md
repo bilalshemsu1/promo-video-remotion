@@ -180,6 +180,12 @@ promo-video-remotion audio:master out/promo.mp4 --out out/promo-mastered.mp4
 
 # 5. Verify sync: tests that MP4 container, downbeat loudness steps, and anchor cue frames match audio onsets
 promo-video-remotion audio:verify out/promo-mastered.mp4 --grid src/audioGrid.json --anchors '{"DROP": 512}'
+
+# 6. Generate word-by-word kinetic captions for TikTok/Reels bouncing subtitles (<KineticCaption />)
+promo-video-remotion captions:generate public/audio/vo/s1.mp3 --fps 30 --out public/audio/vo/captions.json
+
+# 7. Pull competitor reference video via yt-dlp, analyze music BPM/drop & generate 3x3 storyboard contact sheet
+promo-video-remotion ref:pull "https://youtube.com/shorts/..." --out-dir refs/reference
 ```
 
 ## Customize

@@ -31,7 +31,9 @@ This skill ships a **working starter project** (`assets/starter-project/`: a 45 
 ## 2. Workflow
 
 ### Phase A — Intake (ask only what is missing; otherwise use defaults)
-Platform + aspect (default 9:16, 1080×1920, 30 fps) · length (default ≤45 s) · VO and on-screen language · product/brand name, logo, colors, handle/URL, CTA · viewer · tone · reference videos · style direction (default `premium-dark`) · music/VO preference. If the user pasted a script, **keep their copy and timings**; add only what design needs and say what you added. Details: `references/storyboard-and-qa.md`.
+Platform + aspect (default 9:16, 1080×1920, 30 fps) · length (default ≤45 s) · VO and on-screen language · product/brand name, logo, colors, handle/URL, CTA · viewer · tone · reference videos · style direction (default `premium-dark`) · music/VO preference.
+**Reference videos**: If the user provides a reference URL or MP4, run `promo-video-remotion ref:pull <url|file>` to extract its music BPM, drop timestamp, and a 3×3 visual storyboard contact sheet (`contact_sheet.jpg`).
+If the user pasted a script, **keep their copy and timings**; add only what design needs and say what you added. Details: `references/storyboard-and-qa.md`.
 
 ### Phase B — Storyboard table & Music Grid
 Table: time · purpose · visual · on-screen text · VO · SFX. One idea per scene, 3–7 s per scene, ≤7 scenes for 45 s.
@@ -67,6 +69,7 @@ Hard rules (Remotion renders frame by frame):
 ### Phase F — Audio & Sync
 - Built-in synth: `npm run audio` (synth SFX + 120 BPM music bed, no downloads) and `npm run vo` (edge-tts).
 - Custom track: `promo-video-remotion audio:bed track.mp3 --start <start_s> --dur <dur_s> --out public/audio/bed.mp3`.
+- **Kinetic Captions**: `promo-video-remotion captions:generate public/audio/vo/s1.mp3 --fps 30 --out public/audio/vo/captions.json` (or pass `--text "script"`). Render inside scenes using `<KineticCaption />` from `src/ui.tsx` for viral TikTok/Reels word-by-word bouncing subtitle highlights.
 - Put each SFX on the exact frame of its visual hit. Levels: music 0.3, VO 1.0, SFX 0.3–0.9. Details: `references/audio.md`.
 
 ### Phase G — Verify & Master

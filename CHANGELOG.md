@@ -11,6 +11,9 @@ All notable changes to this skill. Dates are ISO.
   - `audio:bed` (`scripts/audio_bed.py`): precision slicing with broadcast EBU R128 loudness normalization (-14.5 LUFS, -1.5 dBTP) and crossfades.
   - `audio:master` (`scripts/audio_master.py`): brickwall transient limiter (ceiling 0.82) and lossless video stream remuxing (`-c:v copy`).
   - `audio:verify` (`scripts/audio_verify.py`): post-render MP4 verifier checking container facts, downbeat energy steps, anchor hit onsets, and peak safety.
+  - `captions:generate` (`scripts/generate_captions.py`): word-by-word kinetic subtitle generator with exact frame timestamps for TikTok/Reels bouncing captions.
+  - `<KineticCaption />`: viral word-by-word animated subtitle component added to `src/ui.tsx`.
+  - `ref:pull` (`scripts/ref_pull.py`): reference video & audio scraper using `yt-dlp` to extract competitor BPM/drop points and a 3×3 visual storyboard contact sheet.
 - Machine-readable `--json` output across all audio tools for direct, reliable AI agent execution.
 - Added audio scripts and npm shortcuts to starter template (`audio:scan`, `audio:grid`, `audio:bed`, `audio:master`, `audio:verify`).
 - Test suite expanded to 7 tests covering all audio CLI commands.
