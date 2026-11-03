@@ -69,6 +69,84 @@ export function glass(r = 48, a = 0.08): React.CSSProperties {
   };
 }
 
+/* ---------- captions ---------- */
+export interface CaptionWord {
+  word: string;
+  start_frame: number;
+  end_frame: number;
+}
+
+export interface CaptionGroup {
+  text: string;
+  start_frame: number;
+  end_frame: number;
+  words: CaptionWord[];
+}
+
+export const KineticCaption: React.FC<{
+  groups: CaptionGroup[];
+  highlightColor?: string;
+  fontSize?: number;
+  bottom?: number;
+  style?: React.CSSProperties;
+}> = ({
+  groups,
+  highlightColor = '#FFD233',
+  fontSize = 44,
+  bottom = 320,
+  style,
+}) => {
+  const f = useCurrentFrame();
+  const currentGroup = groups.find((g) => f >= g.start_frame && f <= g.end_frame);
+  if (!currentGroup) return null;
+
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        bottom,
+        left: 80,
+        right: 80,
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 12,
+        padding: '16px 28px',
+        borderRadius: 24,
+        background: 'rgba(0, 0, 0, 0.65)',
+        backdropFilter: 'blur(24px)',
+        border: '1.5px solid rgba(255, 255, 255, 0.12)',
+        boxShadow: '0 20px 40px rgba(0,0,0,0.5)',
+        zIndex: 50,
+        ...style,
+      }}
+    >
+      {currentGroup.words.map((w, idx) => {
+        const isActive = f >= w.start_frame && f < w.end_frame;
+        return (
+          <span
+            key={idx}
+            style={{
+              fontFamily: FONT,
+              fontSize,
+              fontWeight: 800,
+              letterSpacing: '-0.02em',
+              textTransform: 'uppercase',
+              color: isActive ? highlightColor : '#FFFFFF',
+              transform: isActive ? 'scale(1.12)' : 'scale(1.0)',
+              textShadow: isActive ? `0 0 20px ${highlightColor}80` : '0 2px 8px rgba(0,0,0,0.6)',
+              display: 'inline-block',
+            }}
+          >
+            {w.word}
+          </span>
+        );
+      })}
+    </div>
+  );
+};
+
 /* ---------- brand ---------- */
 export const Plane: React.FC<{size?: number; color?: string}> = ({size = 120, color = '#fff'}) => (
   <svg width={size} height={size} viewBox="0 0 24 24">

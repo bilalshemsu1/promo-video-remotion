@@ -11,6 +11,8 @@
     "audio:bed": "python scripts/audio_bed.py",
     "audio:master": "python scripts/audio_master.py",
     "audio:verify": "python scripts/audio_verify.py",
+    "captions": "python scripts/generate_captions.py",
+    "ref:pull": "python scripts/ref_pull.py",
     "vo": "python scripts/vo.py"
   },
   "dependencies": {
