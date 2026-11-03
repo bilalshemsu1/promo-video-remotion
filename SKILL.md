@@ -33,8 +33,12 @@ This skill ships a **working starter project** (`assets/starter-project/`: a 45 
 ### Phase A — Intake (ask only what is missing; otherwise use defaults)
 Platform + aspect (default 9:16, 1080×1920, 30 fps) · length (default ≤45 s) · VO and on-screen language · product/brand name, logo, colors, handle/URL, CTA · viewer · tone · reference videos · style direction (default `premium-dark`) · music/VO preference. If the user pasted a script, **keep their copy and timings**; add only what design needs and say what you added. Details: `references/storyboard-and-qa.md`.
 
-### Phase B — Storyboard table
-Table: time · purpose · visual · on-screen text · VO · SFX. One idea per scene, 3–7 s per scene, ≤7 scenes for 45 s. If the user said "build it", build; don't stall on approvals.
+### Phase B — Storyboard table & Music Grid
+Table: time · purpose · visual · on-screen text · VO · SFX. One idea per scene, 3–7 s per scene, ≤7 scenes for 45 s.
+**Music-First Grid (Pro Rule)**: When using a custom music track, analyze the audio *before* locking scene frame counts:
+1. `promo-video-remotion audio:scan track.mp3 --target-dur 30 --drop-at 17.0 --json` (finds the climax/drop frame).
+2. `promo-video-remotion audio:grid track.mp3 --fps 30 --export-ts src/audioGrid.ts` (resolves tempo alias and exports downbeat bar frames).
+3. Align scene boundaries and hero transitions to the generated downbeat frames (`AUDIO_GRID.bars`) so visual hits lock naturally with the music.
 
 ### Phase C — Design direction (write it into `src/theme.ts`)
 Choose a preset from `references/style-presets.md` — `premium-dark` (default), `editorial-light`, `bold-social`, `kinetic-type`, or a custom direction built from the six questions in that file. Then write the tokens: canvas + ink, 1 brand color, 1 button accent, type family and scale, surface language (glass / paper / blocks), easing. For `premium-dark`: near-black navy, white type, Inter 700 headlines (tracking −0.045em), Noto Sans Ethiopic or the script's font for non-Latin. Rules: `references/design-system.md`; run the anti-AI checklist **before** coding. State the chosen preset in the project README.
@@ -43,6 +47,8 @@ Choose a preset from `references/style-presets.md` — `premium-dark` (default),
 ```bash
 bash scripts/scaffold.sh <dest-folder>          # macOS / Linux / WSL / Git-Bash
 powershell -File scripts/scaffold.ps1 <dest>    # Windows
+# or using the CLI:
+promo-video-remotion create <dest-folder>
 ```
 Copies the starter, installs deps, generates SFX + music, typechecks. Then rename the composition (`Root.tsx`, `package.json` render script), edit `src/config.ts` (scene ids, start, length), `src/theme.ts`, and replace scene files.
 
@@ -58,15 +64,20 @@ Hard rules (Remotion renders frame by frame):
 - Hooks inside `.map()` only when the array length is constant.
 - Hero content inside the safe zone (§4).
 
-### Phase F — Audio
-`npm run audio` (synth SFX + 120 BPM music bed, no downloads) and `npm run vo` (edge-tts). Put each SFX on the exact frame of its visual hit. Levels: music 0.3, VO 1.0, SFX 0.3–0.9. Details: `references/audio.md`.
+### Phase F — Audio & Sync
+- Built-in synth: `npm run audio` (synth SFX + 120 BPM music bed, no downloads) and `npm run vo` (edge-tts).
+- Custom track: `promo-video-remotion audio:bed track.mp3 --start <start_s> --dur <dur_s> --out public/audio/bed.mp3`.
+- Put each SFX on the exact frame of its visual hit. Levels: music 0.3, VO 1.0, SFX 0.3–0.9. Details: `references/audio.md`.
 
-### Phase G — Verify
+### Phase G — Verify & Master
 1. `npx tsc --noEmit` clean.
 2. `python scripts/lint_design.py src` clean — must-fix errors only (determinism, render-breaking CSS, unsafe hero text). Add `--strict` when using `premium-dark` to also fail on taste warnings (emoji, stacked shadows, overshoot springs, big spins).
-3. Stills of every scene if renderable.
-4. QA checklist in `references/storyboard-and-qa.md`.
-5. VO length vs scene length.
+3. Stills of every scene if renderable (`remotion still`).
+4. Full render: `npm run render` -> `out/promo.mp4`.
+5. **Brickwall Master**: `promo-video-remotion audio:master out/promo.mp4 --out out/promo-mastered.mp4` (limits colliding SFX drop transients, targets -14.7 LUFS / -1.5 dBTP, remuxes losslessly via `-c:v copy`).
+6. **Sync Verification**: `promo-video-remotion audio:verify out/promo-mastered.mp4 --grid src/audioGrid.json --json`.
+7. QA checklist in `references/storyboard-and-qa.md`.
+8. VO length vs scene length.
 
 ### Phase H — Deliver
 Zip the project **without** `node_modules` and `out`; present the zip. In ≤10 lines tell the user: run steps (`npm install` → `npm start` → `npm run vo` → `npm run render`), close Studio before rendering, what is a placeholder, known risks (safe zones, VO overrun, emoji fonts), and the licensing note (§5).

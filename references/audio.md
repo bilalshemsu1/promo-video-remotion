@@ -1,7 +1,7 @@
 # Audio — SFX, music, voiceover, mixing
 
 ## Contents
-1. Layers & levels 2. SFX map 3. Synth SFX (numpy) 4. Music bed 5. Voiceover (edge-tts, human, others) 6. Timing rules 7. Mixing & loudness 8. Stock audio sources 9. Remotion wiring
+1. Layers & levels 2. SFX map 3. Synth SFX (numpy) 4. Music bed 5. Voiceover (edge-tts, human, others) 6. Timing rules 7. The Music-First Grid Workflow 8. Audio Analysis & Sync Tools 9. Mixing & Loudness Mastering 10. Remotion Wiring
 
 ## 1. Layers & levels
 VO 1.0 (always on top) · SFX 0.3–0.9 (ping 0.35, boom 0.9) · music 0.3 (duck to ~0.18 under VO if it masks speech). Target final loudness ≈ −14 LUFS integrated for social.
@@ -43,16 +43,58 @@ Rules:
 - Leave 0.3–0.5 s of music-only before the CTA; end the music on a beat exactly at the last visual flash.
 - Silence is a tool: drop music 3–4 frames before the reveal hit.
 
-## 7. Mixing & loudness (post, optional)
+## 7. The Music-First Grid Workflow (How Real Ads Are Built)
+High-end commercials derive video cuts from the music's architecture, never the reverse.
+1. **Analyze First**: Pick the track and scan it (`promo-video-remotion audio:scan`).
+2. **Find the Anchor (The Drop)**: Identify where the musical climax hits (e.g. frame 512 at 17.08s). Design the hero transition (app reveal, exam UI, problem resolution) on that exact frame.
+3. **Align Downbeat Phase**: Frame 0 must sit on a musical downbeat (`promo-video-remotion audio:grid`).
+4. **Size Scenes to Bars**: Instead of arbitrary frame lengths, set scene durations to multiples of the music bar frames (e.g. 48 frames or 56 frames per bar).
+5. **Master Post-Render**: When drop SFX and music peak together, digital audio exceeds 0 dBFS. Always run `promo-video-remotion audio:master` to shave transient peaks cleanly.
+
+## 8. Audio Analysis & Sync Tools (AI-First)
+All tools accept `--json` for direct AI inspection without parsing stdout.
+
+### `audio:scan` (`scripts/audio_analyzer.py`)
+Analyzes tempo (BPM), intro duration, climax/drop timestamp, breakdown sections, and scores optimal cutting windows:
 ```bash
+promo-video-remotion audio:scan track.mp3 --target-dur 30 --drop-at 17.0 --json
+```
+
+### `audio:grid` (`scripts/audio_grid.py`)
+Resolves tempo half-time aliases, searches downbeat sub-second phase, and exports a TypeScript grid:
+```bash
+promo-video-remotion audio:grid track.mp3 --start 6.0 --dur 30.0 --fps 30 --export-ts src/audioGrid.ts
+```
+
+### `audio:bed` (`scripts/audio_bed.py`)
+Slices the exact duration window from the source track and normalizes to -14.5 LUFS:
+```bash
+promo-video-remotion audio:bed track.mp3 --start 47.0 --dur 33.0 --out public/audio/bed.mp3
+```
+
+### `audio:master` (`scripts/audio_master.py`)
+Brickwall limits digital transients and losslessly remuxes audio into the MP4 (`-c:v copy`):
+```bash
+promo-video-remotion audio:master out/promo.mp4 --out out/promo-mastered.mp4
+```
+
+### `audio:verify` (`scripts/audio_verify.py`)
+Verifies that container properties, downbeat loudness steps, and anchor cue frames match audio onsets:
+```bash
+promo-video-remotion audio:verify out/promo-mastered.mp4 --grid src/audioGrid.json --anchors '{"DROP":512}'
+```
+
+## 9. Mixing & Loudness Mastering
+```bash
+# Automated brickwall master (recommended)
+promo-video-remotion audio:master out/promo.mp4
+
+# Manual ffmpeg fallback:
 ffmpeg -i out/promo.mp4 -af loudnorm=I=-14:TP=-1.5:LRA=11 -c:v copy out/promo_norm.mp4
 ```
 Duck music under VO inside Remotion: `<Audio volume={(f)=> f>voStart && f<voEnd ? 0.18 : 0.3} />` (frame is local to the Sequence).
 
-## 8. Stock audio sources (check each license, keep proof)
-Pixabay Music & SFX · Mixkit · Freesound (CC0/CC-BY — attribution rules vary) · YouTube Audio Library · Uppbeat (free tier with credit) · Epidemic Sound / Artlist / Envato (paid, strong commercial terms). TikTok business accounts: use TikTok's Commercial Music Library — verify current rules. Never rip audio from other videos.
-
-## 9. Remotion wiring
+## 10. Remotion Wiring
 ```tsx
 <Sequence from={at} layout="none"><Audio src={staticFile('audio/sfx/pop.wav')} volume={0.7}/></Sequence>
 ```

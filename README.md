@@ -153,13 +153,34 @@ promo-video-remotion/
 | Phase | What the agent does |
 |---|---|
 | A. Intake | platform, length, language, brand, audience, tone, style preset |
-| B. Storyboard | table of time / purpose / visual / on-screen text / VO / SFX |
+| B. Storyboard | table of time / purpose / visual / on-screen text / VO / SFX + musical grid |
 | C. Direction | writes tokens into `src/theme.ts`, picks the preset |
 | D. Scaffold | copies the starter, installs, generates audio, typechecks |
 | E. Scenes | one file per scene; animation is a pure function of the frame |
-| F. Audio | synth SFX + music, edge-tts voiceover, mix |
-| G. Verify | `tsc`, lint, a still per scene, QA checklist |
+| F. Audio | synth SFX + music, edge-tts voiceover, or cut music bed |
+| G. Verify | `tsc`, lint, stills, brickwall master, sync verification |
 | H. Deliver | zip without `node_modules`/`out`, short run steps, placeholders, risks |
+
+## Audio Analysis & Sync Tools (AI-First)
+
+The CLI ships built-in audio analysis and mastering tools designed for AI agents and human developers alike. All commands support `--json` for direct programmatic integration:
+
+```bash
+# 1. Scan any music track: detects BPM, intro, drop timestamp, and optimal 30s cut windows
+promo-video-remotion audio:scan track.mp3 --target-dur 30 --drop-at 17.0 --json
+
+# 2. Frame-lock the musical grid: resolves tempo alias, finds downbeat phase, and exports TypeScript
+promo-video-remotion audio:grid track.mp3 --fps 30 --export-ts src/audioGrid.ts
+
+# 3. Cut & normalize the music bed: slices window and normalizes to -14.5 LUFS with smooth fades
+promo-video-remotion audio:bed track.mp3 --start 47.0 --dur 30.0 --out public/audio/bed.mp3
+
+# 4. Brickwall master: limits colliding SFX drop transients and remuxes losslessly into MP4 (-c:v copy)
+promo-video-remotion audio:master out/promo.mp4 --out out/promo-mastered.mp4
+
+# 5. Verify sync: tests that MP4 container, downbeat loudness steps, and anchor cue frames match audio onsets
+promo-video-remotion audio:verify out/promo-mastered.mp4 --grid src/audioGrid.json --anchors '{"DROP": 512}'
+```
 
 ## Customize
 
