@@ -4,7 +4,13 @@
   "scripts": {
     "start": "remotion studio",
     "render": "remotion render src/index.ts Promo out/promo.mp4 --port=3456",
+    "master": "python scripts/audio_master.py out/promo.mp4",
     "audio": "python scripts/make_audio.py",
+    "audio:scan": "python scripts/audio_analyzer.py",
+    "audio:grid": "python scripts/audio_grid.py",
+    "audio:bed": "python scripts/audio_bed.py",
+    "audio:master": "python scripts/audio_master.py",
+    "audio:verify": "python scripts/audio_verify.py",
     "vo": "python scripts/vo.py"
   },
   "dependencies": {
