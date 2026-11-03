@@ -2,6 +2,23 @@
 
 All notable changes to this skill. Dates are ISO.
 
+## [1.3.0] — 2026-11-03
+
+### Added
+- **AI-first Audio Analysis & Music Grid System**:
+  - `audio:scan` (`scripts/audio_analyzer.py`): STFT spectral flux, RMS dB tracking, BPM detection, intro/drop detection, and optimal window scoring for target video durations.
+  - `audio:grid` (`scripts/audio_grid.py`): downbeat phase alignment, tempo alias resolution, and export to TypeScript (`src/audioGrid.ts`) with exact frame numbers for every bar and beat.
+  - `audio:bed` (`scripts/audio_bed.py`): precision slicing with broadcast EBU R128 loudness normalization (-14.5 LUFS, -1.5 dBTP) and crossfades.
+  - `audio:master` (`scripts/audio_master.py`): brickwall transient limiter (ceiling 0.82) and lossless video stream remuxing (`-c:v copy`).
+  - `audio:verify` (`scripts/audio_verify.py`): post-render MP4 verifier checking container facts, downbeat energy steps, anchor hit onsets, and peak safety.
+- Machine-readable `--json` output across all audio tools for direct, reliable AI agent execution.
+- Added audio scripts and npm shortcuts to starter template (`audio:scan`, `audio:grid`, `audio:bed`, `audio:master`, `audio:verify`).
+- Test suite expanded to 7 tests covering all audio CLI commands.
+
+### Changed
+- `SKILL.md` updated with the **Music-First Grid Architecture** (analyzing and aligning downbeats before writing scene frame durations).
+- `references/audio.md` expanded with real-world production recipes, grid alignment rules, and mastering practices.
+
 ## [1.2.0] — 2026-10-25
 
 ### Added
