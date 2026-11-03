@@ -25,20 +25,33 @@ Usage:
   promo-video-remotion create <dir> [--skip-install] [--force]
   promo-video-remotion install [--agent qoder|claude] [--project] [--force]
   promo-video-remotion doctor
+  promo-video-remotion audio:scan <track> [--target-dur 30] [--drop-at 17] [--json]
+  promo-video-remotion audio:grid <track> [--fps 30] [--export-ts src/audioGrid.ts] [--json]
+  promo-video-remotion audio:bed <track> [--start 0] [--dur 30] [--out public/audio/bed.mp3]
+  promo-video-remotion audio:master <video.mp4> [--out <mastered.mp4>] [--ceiling 0.82]
+  promo-video-remotion audio:verify <video.mp4> [--grid <grid.json>] [--anchors '{"DROP":512}']
   promo-video-remotion --help | --version
 
 Commands:
-  create    Copy the starter project, install dependencies, synthesize audio,
-            and typecheck it. Then open the folder and run: npm run render
-  install   Copy this skill into an agent skills folder so the agent can use it.
-            Default: ~/.qoder/skills/${NAME}
-            --agent claude -> ~/.claude/skills/${NAME}
-            --project      -> ./.qoder/skills/${NAME} (or ./.claude/...)
-  doctor    Check Node, npm, Python, numpy, edge-tts, ffmpeg and Chrome.
+  create        Copy the starter project, install dependencies, synthesize audio,
+                and typecheck it. Then open the folder and run: npm run render
+  install       Copy this skill into an agent skills folder so the agent can use it.
+                Default: ~/.qoder/skills/${NAME}
+                --agent claude -> ~/.claude/skills/${NAME}
+                --project      -> ./.qoder/skills/${NAME} (or ./.claude/...)
+  doctor        Check Node, npm, Python, numpy, edge-tts, ffmpeg and Chrome.
+
+Audio & Sync Tools (AI-first):
+  audio:scan    Detect track tempo (BPM), intro, drop timestamp and score optimal cutting windows.
+  audio:grid    Resolve tempo alias, calculate downbeat phase, and generate frame-locked Remotion grid.
+  audio:bed     Slice and normalize music bed (-14.5 LUFS) with broadcast curves and fades.
+  audio:master  Brickwall limit audio transients and losslessly remux into finished video (-c:v copy).
+  audio:verify  Verify container specifications, downbeat alignment, and anchor hits on rendered MP4.
 
 Options:
   --skip-install   create: scaffold only; do not run npm/pip
   --force          overwrite an existing target
+  --json           audio commands: output machine-readable JSON
   -h, --help       show this help
   -v, --version    print the version
 `;
@@ -255,6 +268,18 @@ function install({agent, project, force}) {
   return 0;
 }
 
+function runPythonScript(scriptName, scriptArgs) {
+  const py = findPython();
+  if (!py) fail('Python 3.9+ was not found. Install Python and numpy to use audio tools.');
+  const scriptPath = path.join(ROOT, 'scripts', scriptName);
+  if (!existsSync(scriptPath)) fail(`Script not found: ${scriptPath}`);
+  const res = spawnSync(py, [scriptPath, ...scriptArgs], {
+    stdio: 'inherit',
+    shell: false,
+  });
+  return res.status === null ? 1 : res.status;
+}
+
 /* ---------- doctor ---------- */
 
 function doctor() {
@@ -286,6 +311,33 @@ if (argv.includes('--help') || argv.includes('-h') || argv.length === 0) {
 if (argv.includes('--version') || argv.includes('-v')) {
   log(pkg.version);
   process.exit(0);
+}
+
+const cmd = argv[0];
+
+// Audio commands forward their flags and arguments directly to Python scripts
+switch (cmd) {
+  case 'audio:scan':
+  case 'audio-scan':
+    process.exit(runPythonScript('audio_analyzer.py', argv.slice(1)));
+    break;
+  case 'audio:grid':
+  case 'audio-grid':
+    process.exit(runPythonScript('audio_grid.py', argv.slice(1)));
+    break;
+  case 'audio:bed':
+  case 'audio-bed':
+    process.exit(runPythonScript('audio_bed.py', argv.slice(1)));
+    break;
+  case 'audio:master':
+  case 'audio-master':
+  case 'master':
+    process.exit(runPythonScript('audio_master.py', argv.slice(1)));
+    break;
+  case 'audio:verify':
+  case 'audio-verify':
+    process.exit(runPythonScript('audio_verify.py', argv.slice(1)));
+    break;
 }
 
 const args = parseArgs(argv);

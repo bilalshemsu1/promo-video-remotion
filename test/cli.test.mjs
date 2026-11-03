@@ -23,6 +23,17 @@ test('--help prints usage and exits 0', () => {
   assert.equal(r.status, 0);
   assert.match(r.stdout, /Usage:/);
   assert.match(r.stdout, /create <dir>/);
+  assert.match(r.stdout, /audio:scan/);
+  assert.match(r.stdout, /audio:grid/);
+  assert.match(r.stdout, /audio:master/);
+});
+
+test('audio CLI commands respond to --help', () => {
+  for (const cmd of ['audio:scan', 'audio:grid', 'audio:bed', 'audio:master', 'audio:verify']) {
+    const r = cli([cmd, '--help']);
+    assert.equal(r.status, 0, `failed on ${cmd}`);
+    assert.match(r.stdout, /usage:/i);
+  }
 });
 
 test('--version prints package version', () => {
