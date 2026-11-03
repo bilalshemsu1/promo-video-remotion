@@ -29,7 +29,7 @@ test('--help prints usage and exits 0', () => {
 });
 
 test('audio CLI commands respond to --help', () => {
-  for (const cmd of ['audio:scan', 'audio:grid', 'audio:bed', 'audio:master', 'audio:verify']) {
+  for (const cmd of ['audio:scan', 'audio:grid', 'audio:bed', 'audio:master', 'audio:verify', 'captions:generate', 'ref:pull']) {
     const r = cli([cmd, '--help']);
     assert.equal(r.status, 0, `failed on ${cmd}`);
     assert.match(r.stdout, /usage:/i);

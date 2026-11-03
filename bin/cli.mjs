@@ -30,6 +30,8 @@ Usage:
   promo-video-remotion audio:bed <track> [--start 0] [--dur 30] [--out public/audio/bed.mp3]
   promo-video-remotion audio:master <video.mp4> [--out <mastered.mp4>] [--ceiling 0.82]
   promo-video-remotion audio:verify <video.mp4> [--grid <grid.json>] [--anchors '{"DROP":512}']
+  promo-video-remotion captions:generate [audio.mp3] [--text "script"] [--out public/audio/vo/captions.json]
+  promo-video-remotion ref:pull <url|file> [--out-dir refs/reference] [--fps 30]
   promo-video-remotion --help | --version
 
 Commands:
@@ -42,11 +44,13 @@ Commands:
   doctor        Check Node, npm, Python, numpy, edge-tts, ffmpeg and Chrome.
 
 Audio & Sync Tools (AI-first):
-  audio:scan    Detect track tempo (BPM), intro, drop timestamp and score optimal cutting windows.
-  audio:grid    Resolve tempo alias, calculate downbeat phase, and generate frame-locked Remotion grid.
-  audio:bed     Slice and normalize music bed (-14.5 LUFS) with broadcast curves and fades.
-  audio:master  Brickwall limit audio transients and losslessly remux into finished video (-c:v copy).
-  audio:verify  Verify container specifications, downbeat alignment, and anchor hits on rendered MP4.
+  audio:scan         Detect track tempo (BPM), intro, drop timestamp and score optimal cutting windows.
+  audio:grid         Resolve tempo alias, calculate downbeat phase, and generate frame-locked Remotion grid.
+  audio:bed          Slice and normalize music bed (-14.5 LUFS) with broadcast curves and fades.
+  audio:master       Brickwall limit audio transients and losslessly remux into finished video (-c:v copy).
+  audio:verify       Verify container specifications, downbeat alignment, and anchor hits on rendered MP4.
+  captions:generate  Extract word-by-word timestamps for animated bouncing captions (<KineticCaption />).
+  ref:pull           Pull reference video via yt-dlp, extract BPM/drop, and generate visual contact sheet.
 
 Options:
   --skip-install   create: scaffold only; do not run npm/pip
@@ -337,6 +341,14 @@ switch (cmd) {
   case 'audio:verify':
   case 'audio-verify':
     process.exit(runPythonScript('audio_verify.py', argv.slice(1)));
+    break;
+  case 'captions:generate':
+  case 'captions':
+    process.exit(runPythonScript('generate_captions.py', argv.slice(1)));
+    break;
+  case 'ref:pull':
+  case 'ref-pull':
+    process.exit(runPythonScript('ref_pull.py', argv.slice(1)));
     break;
 }
 
