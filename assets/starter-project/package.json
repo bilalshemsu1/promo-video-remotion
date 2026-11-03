@@ -14,7 +14,7 @@
     "vo": "python scripts/vo.py"
   },
   "dependencies": {
-    "@remotion/cli": "^4.0.538",
+    "@remotion/cli": "^4.0.539",
     "@remotion/google-fonts": "^4.0.538",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
